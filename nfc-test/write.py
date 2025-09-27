@@ -48,4 +48,13 @@ while True:
 
         print("Write successful! Remove the NFC tag.")
         GPIO.output(LED_PIN, GPIO.LOW)
-        time.sleep(1)
+        
+        # Wait for card to be removed before starting next cycle
+        print("Waiting for card to be removed...")
+        while True:
+            check_uid = pn532.read_passive_target(timeout=0.5)
+            if not check_uid:
+                print("Card removed! Ready for next tag.")
+                time.sleep(1)  # Brief pause before starting next cycle
+                break
+            time.sleep(0.2)  # Small delay before checking again
